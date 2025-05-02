@@ -100,6 +100,9 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<leader>sp', function()
+  vim.cmd 'set spell!'
+end, { desc = 'Enable/disablel spelling' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -355,12 +358,12 @@ require('lazy').setup({
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
-      end, { desc = '[S]earch [/] in Open Files' })
+      -- vim.keymap.set('n', '<leader>s/', function()
+      --   builtin.live_grep {
+      --     grep_open_files = true,
+      --     prompt_title = 'Live Grep in Open Files',
+      --   }
+      -- end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
@@ -581,17 +584,26 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
+
         bashls = {},
         csharp_ls = {},
         docker_compose_language_service = {},
         dockerls = {},
+        golangci_lint_ls = {},
+        gopls = {},
+        html = {},
+        htmlhint = {},
         java_language_server = {},
         kotlin_language_server = {},
+        marksman = {},
+        -- markdown_oxide = {},
+        markuplint = {},
         pyright = {},
         ruby_lsp = {},
-        rubocop = {},
+        superhtml = {},
         sqlls = {},
         ts_ls = {},
+        shellcheck = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -634,7 +646,21 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ast-grep',
+        'gci',
+        'goimports',
+        'gotests',
+        'htmlbeautifier',
+        'isort',
+        'mardkownlint',
+        'mdformat',
+        'prettier',
+        'rubocop',
+        'shfmt',
+        'stylua',
+        'superhtml',
       })
+
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
@@ -688,15 +714,27 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        mardown = { 'mdformat', 'markdownlint' },
+        shell = { 'shfmt', 'shellcheck' },
+        go = { 'goimports', 'gci' },
+        python = { 'isort' },
+        ruby = { 'rubocop' },
+        html = { 'prettier' },
+        javascritp = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
+      formatters = {
+        shfmt = {
+          extra_args = { '-i', '2', '-ci' },
+        },
+      },
     },
   },
-
+  { 'zapling/mason-conform.nvim' },
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
