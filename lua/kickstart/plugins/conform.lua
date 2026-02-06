@@ -44,6 +44,7 @@ return {
         ruby = { 'rubocop' },
         html = { 'prettier' },
         javascript = { 'prettier' },
+        json = { 'jq' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -54,6 +55,10 @@ return {
         shfmt = {
           inherit = true,
           append_args = { '-i', '2', '-ci' },
+        },
+        jq = {
+          inherit = true,
+          append_args = { '--indent', '2 ' },
         },
       },
     },

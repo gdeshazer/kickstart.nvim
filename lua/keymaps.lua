@@ -36,7 +36,26 @@ end, { desc = 'Toggle [s]pelling' })
 
 vim.keymap.set('n', '<leader>tw', function()
   vim.cmd 'set wrap!'
+  vim.cmd 'set linebreak!'
 end, { desc = 'Toggle [w]rapping' })
+
+vim.keymap.set('n', '<leader>tW', function()
+  local format = vim.opt_local.formatoptions:get()
+
+  local has_hardwrap = false
+  for _, v in ipairs(format) do
+    if v == 't' then
+      has_hardwrap = true
+      break
+    end
+  end
+
+  if has_hardwrap then
+    vim.opt_local.formatoptios:remove 't'
+  else
+    vim.opt_local.formatoptions:append 't'
+  end
+end, { desc = 'Toggle hard [W]rapping' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

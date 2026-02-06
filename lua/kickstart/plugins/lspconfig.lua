@@ -218,7 +218,11 @@ return {
         html = {},
         java_language_server = {},
         kotlin_language_server = {},
-        ltex_plus = {},
+        ltex_plus = {
+          flags = {
+            debounce_text_changes = 200,
+          },
+        },
         marksman = {},
         -- markdown_oxide = {},
         pyright = {},
