@@ -35,25 +35,36 @@ vim.keymap.set('n', '<leader>ts', function()
 end, { desc = 'Toggle [s]pelling' })
 
 vim.keymap.set('n', '<leader>tw', function()
-  vim.cmd 'set wrap!'
-  vim.cmd 'set linebreak!'
+  local buf = vim.api.nvim_get_current_buf()
+  local wrap = vim.opt_local.wrap:get()
+  print("wrap is '", wrap, "'")
+
+  if wrap then
+    vim.opt_local.wrap = false
+    -- intentionally leaving linbreak alone
+
+    -- Restore normal movement by removing buffer-local maps
+    pcall(vim.keymap.del, 'n', 'j', { buffer = buf })
+    pcall(vim.keymap.del, 'n', 'k', { buffer = buf })
+  else
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+
+    -- Wrapped-line-friendly movement
+    vim.keymap.set('n', 'j', 'gj', { buffer = buf, silent = true })
+    vim.keymap.set('n', 'k', 'gk', { buffer = buf, silent = true })
+  end
 end, { desc = 'Toggle [w]rapping' })
 
 vim.keymap.set('n', '<leader>tW', function()
-  local format = vim.opt_local.formatoptions:get()
+  local fo = vim.bo.formatoptions -- string
 
-  local has_hardwrap = false
-  for _, v in ipairs(format) do
-    if v == 't' then
-      has_hardwrap = true
-      break
-    end
-  end
-
-  if has_hardwrap then
-    vim.opt_local.formatoptios:remove 't'
+  if fo:find('t', 1, true) then
+    vim.bo.formatoptions = fo:gsub('t', '')
+    print 'disabled hardwrap'
   else
-    vim.opt_local.formatoptions:append 't'
+    vim.bo.formatoptions = fo .. 't'
+    print 'enabled hardwrap'
   end
 end, { desc = 'Toggle hard [W]rapping' })
 
