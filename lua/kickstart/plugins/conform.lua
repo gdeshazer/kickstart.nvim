@@ -45,6 +45,7 @@ return {
         html = { 'prettier' },
         javascript = { 'prettier' },
         json = { 'jq' },
+        xml = { 'xmlformatter' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -59,6 +60,11 @@ return {
         jq = {
           inherit = true,
           append_args = { '--indent', '2 ' },
+        },
+        xmlformatter = {
+          inherit = false,
+          command = 'xmlformat',
+          args = { '--blanks', '-' },
         },
       },
     },

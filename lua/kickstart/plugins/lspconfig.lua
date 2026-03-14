@@ -228,6 +228,7 @@ return {
         pyright = {},
         ruby_lsp = {},
         superhtml = {},
+        lemminx = {},
         sqlls = {},
         ts_ls = {},
         -- rust_analyzer = {},
@@ -284,6 +285,7 @@ return {
         'shellcheck',
         'htmlhint',
         'markuplint',
+        'xmlformatter',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
