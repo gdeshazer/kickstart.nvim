@@ -1,3 +1,20 @@
+local function createSessionName()
+  local home = vim.uv.os_homedir()
+  local workingDir = vim.fn.getcwd()
+
+  if home == nil then
+    return workingDir
+  end
+
+  local start, en = string.find(workingDir, home, 1, true)
+
+  if start == nil then
+    return workingDir
+  end
+
+  return 'home::' .. string.sub(workingDir, en + 1, -1)
+end
+
 return {
   {
     'stevearc/resession.nvim',
@@ -30,10 +47,16 @@ return {
       -- Auto-save session on exit
       vim.api.nvim_create_autocmd('VimEnter', {
         callback = function()
+          -- don't create a session for the home directory
+          if vim.uv.os_homedir() == vim.fn.getcwd() then
+            return
+          end
+
           -- Only load the session if nvim was started with no args and without reading from stdin
           if vim.fn.argc(-1) == 0 and not vim.g.using_stdin then
             -- Save these to a different directory, so our manual sessions don't get polluted
-            resession.load(vim.fn.getcwd(), { silence_errors = true })
+            local sessionName = createSessionName()
+            resession.load(sessionName, { silence_errors = true })
           end
         end,
         nested = true,
@@ -41,7 +64,14 @@ return {
 
       vim.api.nvim_create_autocmd('VimLeavePre', {
         callback = function()
-          resession.save(vim.fn.getcwd(), { notify = false })
+          -- don't create a session for the home directory
+          if vim.uv.os_homedir() == vim.fn.getcwd() then
+            return
+          end
+
+          if vim.fn.argc(-1) == 0 and not vim.g.using_stdin then
+            resession.save(createSessionName(), { notify = false })
+          end
         end,
       })
 
