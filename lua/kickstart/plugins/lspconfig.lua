@@ -1,4 +1,6 @@
 -- LSP Plugins
+---@module 'lazy'
+---@type LazySpec
 return {
   {
     -- Main LSP Configuration
@@ -135,9 +137,7 @@ return {
           --
           -- This may be unwanted, since they displace some of your code
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle Inlay [H]ints')
+            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
@@ -159,6 +159,7 @@ return {
         dockerls = {},
         golangci_lint_ls = {},
         gopls = {},
+        harper_ls = {},
         html = {},
         java_language_server = {},
         kotlin_language_server = {},
@@ -209,7 +210,7 @@ return {
         },
 
         marksman = {},
-        -- markdown_oxide = {},
+        markdown_oxide = {},
         pyright = {},
         ruby_lsp = {},
         lemminx = {},
@@ -226,9 +227,7 @@ return {
           on_init = function(client)
             if client.workspace_folders then
               local path = client.workspace_folders[1].name
-              if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
-                return
-              end
+              if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
             end
 
             client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
@@ -266,7 +265,7 @@ return {
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      ---@type list[string]
+      ---@type string[]
       local ensure_installed = {
         'ast-grep',
         'gci',

@@ -33,6 +33,8 @@ local check_external_reqs = function()
   return true
 end
 
+---@module 'lazy'
+---@type LazySpec
 return {
   check = function()
     vim.health.start 'kickstart.nvim'
@@ -50,3 +52,5 @@ return {
     check_external_reqs()
   end,
 }
+
+-- vim: ts=2 sts=2 sw=2 et
