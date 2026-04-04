@@ -1,6 +1,5 @@
 -- [[ Configure and install plugins ]]
 require('lazy').setup({
-
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.which-key',
   require 'kickstart.plugins.treesitter',
